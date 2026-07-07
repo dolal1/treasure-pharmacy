@@ -1,0 +1,17 @@
+Dear {{ booking.full_name }},
+
+Thank you for booking with Treasure Pharmacy.
+
+Your booking reference is {{ booking.reference }} — keep it for your records.
+
+  Service:  {{ booking.service.name }}
+  Date:     {{ booking.preferred_date|date:"D j M Y" }} at {{ booking.preferred_time|time:"H:i" }}
+{% if booking.branch %}  Branch:   {{ booking.branch.name }} — {{ booking.branch.address }}
+{% endif %}{% if booking.home_address %}  Visit at: {{ booking.home_address }}
+{% endif %}
+Our team will contact you shortly on {{ booking.phone }} to confirm your
+appointment. If you need to make changes, reply to this email or reach us
+on WhatsApp.
+
+Stay well,
+Treasure Pharmacy, Kampala

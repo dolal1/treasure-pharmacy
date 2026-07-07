@@ -1,0 +1,15 @@
+New service booking received.
+
+Reference:       {{ booking.reference }}
+Service:         {{ booking.service.name }} ({{ booking.service.category.name }})
+Client:          {{ booking.full_name }}
+Phone:           {{ booking.phone }}
+Email:           {{ booking.email }}
+Branch:          {{ booking.branch|default:"—" }}
+{% if booking.home_address %}Home address:    {{ booking.home_address }}
+{% endif %}Preferred:       {{ booking.preferred_date|date:"D j M Y" }} at {{ booking.preferred_time|time:"H:i" }}
+
+Notes:
+{{ booking.notes|default:"(none)" }}
+
+The compiled intake form is attached as a PDF.

@@ -1,0 +1,71 @@
+{% load humanize %}<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+  @page {
+    size: A4;
+    margin: 2cm 1.8cm;
+    @bottom-center {
+      content: "Treasure Pharmacy · Kampala, Uganda · Generated automatically by the booking portal";
+      font-size: 8pt;
+      color: #94a3b8;
+    }
+  }
+  body { font-family: Helvetica, Arial, sans-serif; color: #0f172a; font-size: 11pt; }
+  .header { border-bottom: 3px solid #0d9488; padding-bottom: 12pt; margin-bottom: 18pt; }
+  .brand { font-size: 20pt; font-weight: bold; color: #0d9488; letter-spacing: 0.5pt; }
+  .tagline { font-size: 9pt; color: #64748b; margin-top: 2pt; }
+  .doc-title { font-size: 13pt; font-weight: bold; margin: 16pt 0 4pt; }
+  .reference {
+    display: inline-block; background: #f0fdfa; color: #0f766e;
+    border: 1px solid #99f6e4; border-radius: 4pt;
+    padding: 4pt 10pt; font-size: 12pt; font-weight: bold; margin-bottom: 14pt;
+  }
+  table { width: 100%; border-collapse: collapse; margin-top: 6pt; }
+  th, td { text-align: left; padding: 7pt 9pt; font-size: 10.5pt; }
+  th { width: 32%; background: #f8fafc; color: #475569; font-weight: 600;
+       border-bottom: 1px solid #e2e8f0; }
+  td { border-bottom: 1px solid #e2e8f0; }
+  .section { margin-top: 16pt; font-size: 10pt; font-weight: bold; color: #0d9488;
+             text-transform: uppercase; letter-spacing: 1pt; }
+  .notes { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 4pt;
+           padding: 10pt; margin-top: 6pt; min-height: 40pt; white-space: pre-wrap; }
+  .meta { margin-top: 20pt; font-size: 8.5pt; color: #94a3b8; }
+</style>
+</head>
+<body>
+  <div class="header">
+    <div class="brand">Treasure Pharmacy</div>
+    <div class="tagline">Digital Clinic &amp; Pharmacy Portal — Kampala, Uganda</div>
+  </div>
+
+  <div class="doc-title">Service Booking — Intake Form</div>
+  <div class="reference">{{ booking.reference }}</div>
+
+  <div class="section">Client</div>
+  <table>
+    <tr><th>Full name</th><td>{{ booking.full_name }}</td></tr>
+    <tr><th>Phone</th><td>{{ booking.phone }}</td></tr>
+    <tr><th>Email</th><td>{{ booking.email }}</td></tr>
+    {% if booking.home_address %}<tr><th>Home address</th><td>{{ booking.home_address }}</td></tr>{% endif %}
+  </table>
+
+  <div class="section">Requested service</div>
+  <table>
+    <tr><th>Service</th><td>{{ booking.service.name }}</td></tr>
+    <tr><th>Category</th><td>{{ booking.service.category.name }}</td></tr>
+    <tr><th>Listed price</th><td>UGX {{ booking.service.price|intcomma }}</td></tr>
+    <tr><th>Branch</th><td>{{ booking.branch|default:"— (home visit or to be assigned)" }}</td></tr>
+    <tr><th>Preferred date</th><td>{{ booking.preferred_date|date:"l, j F Y" }}</td></tr>
+    <tr><th>Preferred time</th><td>{{ booking.preferred_time|time:"H:i" }}</td></tr>
+  </table>
+
+  <div class="section">Client notes</div>
+  <div class="notes">{{ booking.notes|default:"(none)" }}</div>
+
+  <div class="meta">
+    Submitted {{ booking.created_at|date:"j F Y, H:i" }} EAT · Status at generation: {{ booking.get_status_display }}
+  </div>
+</body>
+</html>
