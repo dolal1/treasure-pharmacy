@@ -1,9 +1,13 @@
 name: CI
 
+# On hold: runs only when triggered manually from the Actions tab.
+# To enable automatic runs, replace the trigger with:
+#   on:
+#     push:
+#       branches: [main]
+#     pull_request:
 on:
-  push:
-    branches: [main]
-  pull_request:
+  workflow_dispatch:
 
 jobs:
   backend:

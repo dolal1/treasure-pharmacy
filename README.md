@@ -93,8 +93,10 @@ cd backend && uv run pytest && uv run ruff check .   # pipeline, API, throttle, 
 cd frontend && npm run lint && npm run build          # oxlint + tsc + vite
 ```
 
-CI (GitHub Actions) runs both suites on every push/PR, with a real PostgreSQL service and
-the WeasyPrint system libraries installed.
+CI (GitHub Actions) runs both suites with a real PostgreSQL service and the WeasyPrint
+system libraries installed. It is currently **manual-only** (trigger it from the Actions
+tab) — switch the trigger back to `push`/`pull_request` in
+[.github/workflows/ci.yml](.github/workflows/ci.yml) when ready.
 
 ## Deployment (free tier)
 
@@ -109,8 +111,7 @@ the WeasyPrint system libraries installed.
 Set `ADMIN_URL` to an unguessable path in production — the back office is deliberately not
 linked anywhere on the frontend.
 
-<details>
-<summary><strong>Original AWS architecture (from the client engagement)</strong></summary>
+### Original AWS architecture (from the client engagement)
 
 The original project plan targeted AWS: React build on **S3 + CloudFront**, Django on
 **EC2** behind an ALB, **RDS PostgreSQL**, media on **S3**, and booking emails through
@@ -118,8 +119,6 @@ The original project plan targeted AWS: React build on **S3 + CloudFront**, Djan
 indefinitely, while keeping the same separation (static frontend / containerised API /
 managed Postgres / object storage / transactional email) — the AWS layout maps 1:1 back
 onto it if a client wants to run it there.
-
-</details>
 
 ## Project layout
 
