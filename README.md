@@ -59,6 +59,9 @@ flowchart LR
 pharmacy inbox + confirmation to the client → `201` with the reference. PDF/email failures
 are logged but never lose the booking.
 
+For a full walkthrough of content, rendering and every user/admin action, see
+[docs/HOW_IT_WORKS.md](docs/HOW_IT_WORKS.md).
+
 ## Quick start (local)
 
 Requirements: Docker. One env file drives the whole stack:
