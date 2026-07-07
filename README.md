@@ -168,3 +168,8 @@ pharmacy/
   Booking model), emailed receipts.
 - Client accounts with booking history; 2FA (django-otp) for the back office; task queue
   for the PDF/email pipeline.
+
+## License
+
+Proprietary — all rights reserved. See [LICENSE](LICENSE). This is a private portfolio
+project; no reuse or redistribution is permitted without written consent.
