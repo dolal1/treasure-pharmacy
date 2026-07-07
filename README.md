@@ -80,14 +80,14 @@ setup steps.
 - API docs: <http://localhost:8000/api/docs/>
 - Back office: <http://localhost:8000/back-office/> — login `admin` / `admin1234`
   (from `.env`; path is `ADMIN_URL`)
-- Booking emails print to the backend container log
-  (`docker compose logs -f backend`).
+- Booking emails are caught by MailHog: <http://localhost:8025>
+  (nothing leaves your machine in dev).
 - Source is bind-mounted: backend and frontend hot-reload on edit.
 
 ### Running the apps outside Docker (optional)
 
 Requires Python 3.12+ with [uv](https://docs.astral.sh/uv/) and Node 20+.
-Start only the database with `docker compose up -d db`, then:
+Start the database and MailHog with `docker compose up -d db mailhog`, then:
 
 ```bash
 # Backend — http://localhost:8000 (uses backend/.env, see backend/.env.example)

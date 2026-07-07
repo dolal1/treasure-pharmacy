@@ -19,6 +19,13 @@ services:
       timeout: 3s
       retries: 10
 
+  mailhog:
+    image: mailhog/mailhog:v1.0.1
+    container_name: pharmacy_mailhog
+    ports:
+      - "8025:8025" # web UI — view caught emails at http://localhost:8025
+      - "1025:1025" # SMTP the backend sends to
+
   backend:
     build:
       context: backend
@@ -29,6 +36,8 @@ services:
         required: false
     environment:
       DATABASE_URL: postgres://${POSTGRES_USER:-pharmacy}:${POSTGRES_PASSWORD:-pharmacy}@db:5432/${POSTGRES_DB:-pharmacy}
+      EMAIL_HOST: mailhog
+      EMAIL_PORT: 1025
     command:
       - sh
       - -c
@@ -45,6 +54,8 @@ services:
     depends_on:
       db:
         condition: service_healthy
+      mailhog:
+        condition: service_started
 
   frontend:
     image: node:22-alpine
