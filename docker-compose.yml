@@ -1,20 +1,66 @@
+# Full local stack: `cp .env.example .env && docker compose up --build`
+# db + Django API (auto migrate/seed/superuser) + Vite dev server.
+# Both app containers bind-mount the source, so edits hot-reload.
 services:
   db:
     image: postgres:16-alpine
     container_name: pharmacy_db
     environment:
-      POSTGRES_DB: pharmacy
-      POSTGRES_USER: pharmacy
-      POSTGRES_PASSWORD: pharmacy
+      POSTGRES_DB: ${POSTGRES_DB:-pharmacy}
+      POSTGRES_USER: ${POSTGRES_USER:-pharmacy}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-pharmacy}
     ports:
       - "5432:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U pharmacy"]
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-pharmacy}"]
       interval: 5s
       timeout: 3s
       retries: 10
 
+  backend:
+    build:
+      context: backend
+      dockerfile: Dockerfile.dev
+    container_name: pharmacy_backend
+    env_file:
+      - path: .env
+        required: false
+    environment:
+      DATABASE_URL: postgres://${POSTGRES_USER:-pharmacy}:${POSTGRES_PASSWORD:-pharmacy}@db:5432/${POSTGRES_DB:-pharmacy}
+    command:
+      - sh
+      - -c
+      - |
+        set -e
+        python manage.py migrate
+        python manage.py seed_demo
+        python manage.py createsuperuser --noinput 2>/dev/null && echo "Superuser created from .env" || echo "Superuser already exists - skipping"
+        python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - ./backend:/app
+    ports:
+      - "8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+
+  frontend:
+    image: node:22-alpine
+    container_name: pharmacy_frontend
+    working_dir: /app
+    environment:
+      VITE_API_URL: ${VITE_API_URL:-http://localhost:8000}
+    command: sh -c "npm install && npm run dev -- --host 0.0.0.0"
+    volumes:
+      - ./frontend:/app
+      - frontend_node_modules:/app/node_modules
+    ports:
+      - "5173:5173"
+    depends_on:
+      - backend
+
 volumes:
   pgdata:
+  frontend_node_modules:

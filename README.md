@@ -61,30 +61,45 @@ are logged but never lose the booking.
 
 ## Quick start (local)
 
-Requirements: Docker, Python 3.12+ with [uv](https://docs.astral.sh/uv/), Node 20+.
+Requirements: Docker. One env file drives the whole stack:
 
 ```bash
-# 1. Database
-docker compose up -d
+cp .env.example .env      # defaults work out of the box
+docker compose up --build
+```
 
-# 2. Backend — http://localhost:8000
+That starts PostgreSQL, the Django API and the Vite dev server. On boot the backend
+runs migrations, seeds demo data (branches, services, products, site copy) and creates
+the back-office superuser from the `DJANGO_SUPERUSER_*` values in `.env` — no manual
+setup steps.
+
+- Site: <http://localhost:5173>
+- API docs: <http://localhost:8000/api/docs/>
+- Back office: <http://localhost:8000/back-office/> — login `admin` / `admin1234`
+  (from `.env`; path is `ADMIN_URL`)
+- Booking emails print to the backend container log
+  (`docker compose logs -f backend`).
+- Source is bind-mounted: backend and frontend hot-reload on edit.
+
+### Running the apps outside Docker (optional)
+
+Requires Python 3.12+ with [uv](https://docs.astral.sh/uv/) and Node 20+.
+Start only the database with `docker compose up -d db`, then:
+
+```bash
+# Backend — http://localhost:8000 (uses backend/.env, see backend/.env.example)
 cd backend
 uv sync
 cp .env.example .env
-uv run python manage.py migrate
-uv run python manage.py seed_demo          # branches, services, products, site copy
+uv run python manage.py migrate && uv run python manage.py seed_demo
 uv run python manage.py createsuperuser
 uv run python manage.py runserver
 
-# 3. Frontend — http://localhost:5173
+# Frontend — http://localhost:5173
 cd frontend
 npm install
 npm run dev
 ```
-
-- API docs: <http://localhost:8000/api/docs/>
-- Back office: <http://localhost:8000/back-office/> (path is `ADMIN_URL` in `.env`)
-- Emails print to the runserver console in development.
 
 ## Tests & linting
 
