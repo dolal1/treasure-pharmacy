@@ -60,7 +60,8 @@ pharmacy inbox + confirmation to the client → `201` with the reference. PDF/em
 are logged but never lose the booking.
 
 For a full walkthrough of content, rendering and every user/admin action, see
-[docs/HOW_IT_WORKS.md](docs/HOW_IT_WORKS.md).
+[docs/HOW_IT_WORKS.md](docs/HOW_IT_WORKS.md). For step-by-step instructions for clients, staff
+and administrators, see [docs/USER_GUIDE.md](docs/USER_GUIDE.md).
 
 ## Quick start (local)
 
